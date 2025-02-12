@@ -1,9 +1,6 @@
 package com.raulrh.flotaespacial.gui;
 
 import com.raulrh.flotaespacial.base.LimitedDocument;
-import com.raulrh.flotaespacial.base.enums.Clase;
-import com.raulrh.flotaespacial.base.enums.Estado;
-import com.raulrh.flotaespacial.base.enums.Rango;
 import com.raulrh.flotaespacial.entities.NaveEspacial;
 import com.raulrh.flotaespacial.gui.controllers.MainController;
 import com.raulrh.flotaespacial.util.Preferences;
@@ -32,7 +29,7 @@ public class View extends JFrame {
     public JButton tripulantesModify;
     public JButton tripulantesDelete;
     public JTextField nombreTripulante;
-    public JComboBox<String> comboNaves;
+    public JComboBox<NaveEspacial> comboNaves;
     public JComboBox<String> rangoTripulante;
 
     public JTable misionesTable;
@@ -68,19 +65,16 @@ public class View extends JFrame {
         mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         this.setContentPane(mainPanel);
 
-        this.pack();
+        this.setSize(900, 300);
         this.setLocationRelativeTo(null);
 
         setupMenu();
         setupFields();
 
-        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(java.awt.event.WindowEvent windowEvent) {
                 Preferences.savePreferences();
-                System.exit(0);
             }
         });
 
@@ -93,11 +87,6 @@ public class View extends JFrame {
         JMenu menu = new JMenu("Archivo");
         itemPreferences = new JMenuItem("Preferencias");
         itemDisconnect = new JMenuItem("Conectar");
-
-        MainController.setPanelEnabled(navesPanel, false);
-        MainController.setPanelEnabled(tripulantesPanel, false);
-        MainController.setPanelEnabled(misionesPanel, false);
-        MainController.setPanelEnabled(informesPanel, false);
 
         menu.add(itemPreferences);
         menu.add(itemDisconnect);

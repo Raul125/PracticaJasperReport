@@ -28,7 +28,7 @@ public class TripulanteTableModel extends AbstractTableModel {
         return columnNames[column];
     }
 
-    public Tripulante getTelevision(int rowIndex) {
+    public Tripulante getTripulante(int rowIndex) {
         return tripulantes.get(rowIndex);
     }
 

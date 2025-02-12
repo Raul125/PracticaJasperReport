@@ -18,6 +18,7 @@ public class MainController {
     public final MisionesController misionesController;
     public final TripulantesController tripulantesController;
     public final NavesController navesController;
+    public final InformesController informesController;
 
     public boolean isConnected = false;
 
@@ -28,6 +29,7 @@ public class MainController {
         misionesController = new MisionesController(this);
         tripulantesController = new TripulantesController(this);
         navesController = new NavesController(this);
+        informesController = new InformesController(this);
 
         setupButtons();
 
@@ -42,6 +44,11 @@ public class MainController {
         for (Estado type : Estado.values()) {
             this.view.estadoMisiones.addItem(type.getContenido());
         }
+
+        setPanelEnabled(view.navesPanel, false);
+        setPanelEnabled(view.tripulantesPanel, false);
+        setPanelEnabled(view.misionesPanel, false);
+        setPanelEnabled(view.informesPanel, false);
     }
 
     public static void setPanelEnabled(JPanel panel, boolean isEnabled) {

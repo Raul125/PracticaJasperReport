@@ -1,165 +1,173 @@
 package com.raulrh.flotaespacial.gui.controllers;
 
 import com.raulrh.flotaespacial.base.Controller;
-import com.raulrh.flotaespacial.gui.models.MisionTableModel;
+import com.raulrh.flotaespacial.entities.NaveEspacial;
+import com.raulrh.flotaespacial.gui.dialogs.MisionTripulanteDialog;
+import com.raulrh.flotaespacial.gui.models.NaveTableModel;
 import com.raulrh.flotaespacial.util.Preferences;
 import com.raulrh.flotaespacial.util.Util;
 
 import javax.swing.*;
-import java.time.LocalDate;
 
-/**
- * Controller class responsible for managing the stock-related actions and interactions in the GUI.
- */
 public class NavesController extends Controller {
-    private MisionTableModel stockTableModel;
+    private NaveTableModel naveTableModel;
 
-    /**
-     * Constructs a StockController instance and initializes it with the main controller.
-     *
-     * @param mainController The main controller of the application.
-     */
     public NavesController(MainController mainController) {
         super(mainController);
     }
 
-    /**
-     * Sets up the event listeners for buttons in the stock management interface.
-     */
     @Override
     public void setupButtons() {
-        mainController.view.stockAdd.addActionListener(e -> {
+        mainController.view.navesAdd.addActionListener(e -> {
             if (!validateFields()) {
                 Util.showWarningDialog("Todos los campos son obligatorios");
                 return;
             }
 
-            mainController.model.addStock(
-                    ((Television) mainController.view.televisionsComboBox1.getSelectedItem()).getId(),
-                    ((Supplier) mainController.view.suppliersComboBox.getSelectedItem()).getId(),
-                    LocalDate.parse(mainController.view.stockDate.getDate().toString()),
-                    (int) mainController.view.stockTotal.getValue()
+            if (mainController.model.checkNaveExists(mainController.view.nombreNave.getText(), -1)) {
+                Util.showWarningDialog("La nave ya existe.");
+                return;
+            }
+
+            mainController.model.addNave(
+                    mainController.view.nombreNave.getText(),
+                    (String) mainController.view.claseNave.getSelectedItem(),
+                    (int) mainController.view.capacidadNave.getValue()
             );
 
             refreshTable();
             clearFields();
         });
 
-        mainController.view.stockModify.addActionListener(e -> {
+        mainController.view.navesModify.addActionListener(e -> {
             if (!validateFields()) {
                 Util.showWarningDialog("Por favor, revisa los campos.");
                 return;
             }
 
-            int row = mainController.view.stockTable.getSelectedRow();
+            int row = mainController.view.navesTable.getSelectedRow();
             if (row == -1) {
-                Util.showWarningDialog("Selecciona un inventario.");
+                Util.showWarningDialog("Selecciona una nave.");
                 return;
             }
 
-            mainController.model.modifyStock(
-                    (int) mainController.view.stockTable.getValueAt(row, 0),
-                    ((Television) mainController.view.televisionsComboBox1.getSelectedItem()).getId(),
-                    ((Supplier) mainController.view.suppliersComboBox.getSelectedItem()).getId(),
-                    LocalDate.parse(mainController.view.stockDate.getDate().toString()),
-                    (int) mainController.view.stockTotal.getValue()
+            if (mainController.model.checkNaveExists(mainController.view.nombreNave.getText(), (int) mainController.view.navesTable.getValueAt(row, 0))) {
+                Util.showWarningDialog("La nave ya existe.");
+                return;
+            }
+
+            mainController.model.modifyNave(
+                    (int) mainController.view.navesTable.getValueAt(row, 0),
+                    mainController.view.nombreNave.getText(),
+                    (String) mainController.view.claseNave.getSelectedItem(),
+                    (int) mainController.view.capacidadNave.getValue()
             );
 
             refreshTable();
             clearFields();
         });
 
-        mainController.view.stockDelete.addActionListener(e -> {
-            int row = mainController.view.stockTable.getSelectedRow();
+        mainController.view.navesDelete.addActionListener(e -> {
+            int row = mainController.view.navesTable.getSelectedRow();
             if (row == -1) {
-                Util.showWarningDialog("Selecciona un inventario.");
+                Util.showWarningDialog("Selecciona una nave.");
                 return;
             }
 
             Preferences preferences = Preferences.getInstance();
             if (preferences.isConfirmDelete()) {
-                int confirm = Util.showConfirm("¿Estás seguro de que quieres eliminar el inventario?", "Eliminar inventario");
+                int confirm = Util.showConfirm("¿Estás seguro de que quieres eliminar la nave?", "Eliminar nave");
                 if (confirm != JOptionPane.OK_OPTION) {
                     return;
                 }
             }
 
-            int id = (int) mainController.view.stockTable.getValueAt(row, 0);
-            mainController.model.deleteStock(id);
+            int id = (int) mainController.view.navesTable.getValueAt(row, 0);
+            mainController.model.deleteNave(id);
 
             refreshTable();
             clearFields();
+
+            mainController.tripulantesController.refreshTable();
+            mainController.misionesController.refreshTable();
         });
     }
 
-    /**
-     * Configures the stock table for interaction and adds a listener for row selection.
-     */
     @Override
     public void setupTable() {
-        mainController.view.stockTable.setCellSelectionEnabled(true);
-        mainController.view.stockTable.setDefaultEditor(Object.class, null);
-        ListSelectionModel cellSelectionModel = mainController.view.stockTable.getSelectionModel();
+        mainController.view.navesTable.setCellSelectionEnabled(true);
+        mainController.view.navesTable.setDefaultEditor(Object.class, null);
+        ListSelectionModel cellSelectionModel = mainController.view.navesTable.getSelectionModel();
         cellSelectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         cellSelectionModel.addListSelectionListener(e -> {
             if (!cellSelectionModel.isSelectionEmpty()) {
-                int row = mainController.view.stockTable.getSelectedRow();
+                int row = mainController.view.navesTable.getSelectedRow();
                 fillFields(row);
             } else {
                 clearFields();
             }
         });
+
+        mainController.view.navesTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                if (!mainController.isConnected) {
+                    return;
+                }
+
+                if (evt.getClickCount() == 2) {
+                    JTable table = (JTable) evt.getSource();
+                    int row = table.getSelectedRow();
+                    if (row != -1) {
+                        NaveEspacial nave = naveTableModel.getNave(row);
+                        MisionTripulanteDialog misionTripulanteDialog = new MisionTripulanteDialog(mainController.view, nave);
+                        misionTripulanteDialog.setVisible(true);
+                    }
+                }
+            }
+        });
     }
 
-    /**
-     * Updates the stock table with the latest data from the model.
-     */
     @Override
     public void refreshTable() {
         try {
-            stockTableModel = new MisionTableModel(mainController.model.getStock());
-            mainController.view.stockTable.setModel(stockTableModel);
+            naveTableModel = new NaveTableModel(mainController.model.getNaves());
+            mainController.view.navesTable.setModel(naveTableModel);
+            refreshComboBox();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    /**
-     * Clears all input fields in the stock management interface.
-     */
+    public void refreshComboBox() {
+        mainController.view.comboNaves.removeAllItems();
+        mainController.view.comboNaves1.removeAllItems();
+        for (NaveEspacial nave : naveTableModel.getNaves()) {
+            mainController.view.comboNaves.addItem(nave);
+            mainController.view.comboNaves1.addItem(nave);
+        }
+    }
+
     @Override
     public void clearFields() {
-        mainController.view.televisionsComboBox1.setSelectedIndex(-1);
-        mainController.view.suppliersComboBox.setSelectedIndex(-1);
-        mainController.view.stockDate.setDate(null);
-        mainController.view.stockTotal.setValue(0);
+        mainController.view.nombreNave.setText("");
+        mainController.view.claseNave.setSelectedIndex(-1);
+        mainController.view.capacidadNave.setValue(0);
     }
 
-    /**
-     * Fills the input fields with data from a selected row in the stock table.
-     *
-     * @param row The index of the selected row in the stock table.
-     */
     @Override
     public void fillFields(int row) {
-        Stock stock = stockTableModel.getStock(row);
-        Util.setSelectedTelevision(mainController.view.televisionsComboBox1, stock.getTelevision().getId());
-        Util.setSelectedSupplier(mainController.view.suppliersComboBox, stock.getSupplier().getId());
-        mainController.view.stockTotal.setValue(stock.getQuantity());
-        mainController.view.stockDate.setDate(stock.getEntryDate());
+        NaveEspacial naveEspacial = naveTableModel.getNave(row);
+        mainController.view.nombreNave.setText(naveEspacial.getNombreNave());
+        mainController.view.claseNave.setSelectedItem(naveEspacial.getClase());
+        mainController.view.capacidadNave.setValue(naveEspacial.getCapacidadTripulacion());
     }
 
-    /**
-     * Validates that all required fields have been filled out correctly.
-     *
-     * @return true if all fields are valid, false otherwise.
-     */
     @Override
     public boolean validateFields() {
-        return mainController.view.televisionsComboBox1.getSelectedIndex() > -1 &&
-                mainController.view.suppliersComboBox.getSelectedIndex() > -1 &&
-                mainController.view.stockDate.getDate() != null &&
-                (int) mainController.view.stockTotal.getValue() > 0;
+        return !mainController.view.nombreNave.getText().isEmpty() &&
+                mainController.view.claseNave.getSelectedIndex() != -1 &&
+                (int) mainController.view.capacidadNave.getValue() > 0;
     }
 }

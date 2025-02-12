@@ -28,7 +28,7 @@ public class MisionTableModel extends AbstractTableModel {
         return columnNames[column];
     }
 
-    public Mision getStock(int rowIndex) {
+    public Mision getMision(int rowIndex) {
         return misionList.get(rowIndex);
     }
 

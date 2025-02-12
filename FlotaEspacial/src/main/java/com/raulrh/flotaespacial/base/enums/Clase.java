@@ -3,7 +3,7 @@ package com.raulrh.flotaespacial.base.enums;
 public enum Clase {
     EXPLORACION("Exploración"),
     COMBATE("Combate"),
-    TRANSPORTE("'Transporte'");
+    TRANSPORTE("Transporte");
 
     private final String contenido;
 

@@ -77,4 +77,8 @@ public class NaveEspacial {
         this.tripulantes = tripulantes;
     }
 
+    @Override
+    public String toString() {
+        return nombreNave;
+    }
 }

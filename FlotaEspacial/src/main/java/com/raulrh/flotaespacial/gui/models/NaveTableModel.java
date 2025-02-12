@@ -28,7 +28,7 @@ public class NaveTableModel extends AbstractTableModel {
         return columnNames[column];
     }
 
-    public NaveEspacial getSupplier(int rowIndex) {
+    public NaveEspacial getNave(int rowIndex) {
         return naves.get(rowIndex);
     }
 
