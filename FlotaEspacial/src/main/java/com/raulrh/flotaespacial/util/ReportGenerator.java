@@ -1,11 +1,12 @@
 package com.raulrh.flotaespacial.util;
 
-import net.sf.jasperreports.engine.*;
-import net.sf.jasperreports.view.JasperViewer;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
-import javax.swing.*;
 import java.util.HashMap;
 import java.util.Map;
 

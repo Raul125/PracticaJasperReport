@@ -2,7 +2,6 @@ package com.raulrh.flotaespacial.gui;
 
 import com.raulrh.flotaespacial.base.LimitedDocument;
 import com.raulrh.flotaespacial.entities.NaveEspacial;
-import com.raulrh.flotaespacial.gui.controllers.MainController;
 import com.raulrh.flotaespacial.util.Preferences;
 
 import javax.imageio.ImageIO;
