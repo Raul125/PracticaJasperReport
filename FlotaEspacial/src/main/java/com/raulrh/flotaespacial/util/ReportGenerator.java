@@ -7,6 +7,8 @@ import net.sf.jasperreports.engine.JasperPrint;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
+import java.awt.*;
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,6 +33,12 @@ public class ReportGenerator {
                 JasperExportManager.exportReportToPdfFile(jasperPrint, "Informe_Generado.pdf");
             } catch (JRException e) {
                 throw new RuntimeException(e);
+            }
+
+            File file = new File("Informe_Generado.pdf");
+            if (Desktop.isDesktopSupported() && file.exists()) {
+                Desktop desktop = Desktop.getDesktop();
+                desktop.open(file);
             }
 
             return jasperPrint;
@@ -65,5 +73,13 @@ public class ReportGenerator {
         Map<String, Object> parametros = new HashMap<>();
         parametros.put("Rango", rango);
         return generarInforme("Informe6.jasper", parametros);
+    }
+
+    public static JasperPrint generarGraficoTripulantes() {
+        return generarInforme("Grafico1.jasper", new HashMap<>());
+    }
+
+    public static JasperPrint generarGraficoMisiones() {
+        return generarInforme("Grafico2.jasper", new HashMap<>());
     }
 }

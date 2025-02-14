@@ -14,7 +14,7 @@ public class InformesController {
     }
 
     public void setup() {
-        mainController.view.informesPanel.setLayout(new GridLayout(3, 2, 10, 10));
+        mainController.view.informesPanel.setLayout(new GridLayout(4, 2, 10, 10));
 
         JButton btnNaves = new JButton("Listado de Naves");
         JButton btnTripulantes = new JButton("Listado de Tripulantes");
@@ -22,6 +22,8 @@ public class InformesController {
         JButton btnMisionesEstado = new JButton("Misiones por Estado");
         JButton btnMisionesNave = new JButton("Misiones por Nave");
         JButton btnTripulacionRango = new JButton("Tripulación por Rango");
+        JButton btnGraficoTripulacion = new JButton("Grafico Tripulación");
+        JButton btnGraficoMisiones = new JButton("Grafico Misiones");
 
         btnNaves.addActionListener(e -> generarInforme("naves"));
         btnTripulantes.addActionListener(e -> generarInforme("tripulantes"));
@@ -29,6 +31,8 @@ public class InformesController {
         btnMisionesEstado.addActionListener(e -> generarInforme("misiones_estado"));
         btnMisionesNave.addActionListener(e -> generarInforme("misiones_nave"));
         btnTripulacionRango.addActionListener(e -> generarInforme("tripulacion_rango"));
+        btnGraficoTripulacion.addActionListener(e -> generarInforme("grafico_tripulacion"));
+        btnGraficoMisiones.addActionListener(e -> generarInforme("grafico_misiones"));
 
         mainController.view.informesPanel.add(btnNaves);
         mainController.view.informesPanel.add(btnTripulantes);
@@ -36,6 +40,8 @@ public class InformesController {
         mainController.view.informesPanel.add(btnMisionesEstado);
         mainController.view.informesPanel.add(btnMisionesNave);
         mainController.view.informesPanel.add(btnTripulacionRango);
+        mainController.view.informesPanel.add(btnGraficoTripulacion);
+        mainController.view.informesPanel.add(btnGraficoMisiones);
     }
 
     private void generarInforme(String tipo) {
@@ -68,6 +74,12 @@ public class InformesController {
                 if (rango != null) {
                     ReportGenerator.generarInformeTripulacionPorRango(rango);
                 }
+                break;
+            case "grafico_tripulacion":
+                ReportGenerator.generarGraficoTripulantes();
+                break;
+            case "grafico_misiones":
+                ReportGenerator.generarGraficoMisiones();
                 break;
         }
     }
