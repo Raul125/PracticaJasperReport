@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<toc version="1.0"> <!--  categoryclosedimage="FolderClosed" categoryopenimage="FolderOpened"  
+topicimage="ItemIco"-->
+    <tocitem text="Ayuda" target="aplicacion">
+        <tocitem text="Introducción" target="introduccion"/>
+        <tocitem text="Naves" target="naves"/>
+        <tocitem text="Tripulantes" target="tripulantes"/>
+        <tocitem text="Misiones" target="misiones"/>
+        <tocitem text="Informes" target="informes"/>
+        <tocitem text="Preferencias" target="preferencias">
+            <tocitem text="Modo Oscuro" target="modo_oscuro"/>
+            <tocitem text="Conectar a Base de Datos" target="conectar_bd"/>
+        </tocitem>
+    </tocitem>
+</toc>

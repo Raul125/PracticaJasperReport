@@ -4,10 +4,14 @@ import com.raulrh.flotaespacial.base.LimitedDocument;
 import com.raulrh.flotaespacial.entities.NaveEspacial;
 import com.raulrh.flotaespacial.util.Preferences;
 
+import javax.help.HelpBroker;
+import javax.help.HelpSet;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
+import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Objects;
 
 public class View extends JFrame {
@@ -21,7 +25,6 @@ public class View extends JFrame {
     public JTextField nombreNave;
     public JSpinner capacidadNave;
     public JComboBox<String> claseNave;
-    public JCheckBox televisionSmartTv;
 
     public JTable tripulantesTable;
     public JButton tripulantesAdd;
@@ -77,6 +80,8 @@ public class View extends JFrame {
             }
         });
 
+        ponLaAyuda();
+
         this.setVisible(true);
     }
 
@@ -98,5 +103,23 @@ public class View extends JFrame {
     private void setupFields() {
         nombreNave.setDocument(new LimitedDocument(100));
         nombreTripulante.setDocument(new LimitedDocument(100));
+    }
+
+    private void ponLaAyuda() {
+        try {
+            File fichero = new File("help/help_set.hs");
+            URL hsURL = fichero.toURI().toURL();
+
+            HelpSet helpset = new HelpSet(getClass().getClassLoader(), hsURL);
+            HelpBroker hb = helpset.createHelpBroker();
+
+            hb.enableHelpKey(getRootPane(), "introduccion", helpset);
+            hb.enableHelpKey(navesPanel, "naves", helpset);
+            hb.enableHelpKey(tripulantesPanel, "tripulantes", helpset);
+            hb.enableHelpKey(misionesPanel, "misiones", helpset);
+            hb.enableHelpKey(informesPanel, "informes", helpset);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }
