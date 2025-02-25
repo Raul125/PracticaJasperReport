@@ -18,6 +18,7 @@ public class HibernateUtil {
     public static void disconnect() {
         if (sessionFactory != null) {
             sessionFactory.close();
+            sessionFactory = null;
         }
     }
 

@@ -7,6 +7,7 @@ import com.raulrh.flotaespacial.gui.Model;
 import com.raulrh.flotaespacial.gui.PreferencesDialog;
 import com.raulrh.flotaespacial.gui.View;
 import com.raulrh.flotaespacial.util.HibernateUtil;
+import com.raulrh.flotaespacial.util.Preferences;
 
 import javax.swing.*;
 import java.awt.*;
@@ -94,6 +95,16 @@ public class MainController {
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }
+        });
+
+        view.itemHelp.addActionListener(e -> {
+            view.helpBroker.setDisplayed(true);
+        });
+
+        view.itemExit.addActionListener(e -> {
+            Preferences.savePreferences();
+            HibernateUtil.disconnect();
+            System.exit(0);
         });
     }
 }

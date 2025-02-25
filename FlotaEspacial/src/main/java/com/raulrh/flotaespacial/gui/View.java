@@ -8,6 +8,7 @@ import javax.help.HelpBroker;
 import javax.help.HelpSet;
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.io.File;
 import java.io.IOException;
@@ -44,11 +45,15 @@ public class View extends JFrame {
 
     public JMenuItem itemPreferences;
     public JMenuItem itemDisconnect;
+    public JMenuItem itemHelp;
+    public JMenuItem itemExit;
 
     public JPanel navesPanel;
     public JPanel tripulantesPanel;
     public JPanel misionesPanel;
     public JPanel informesPanel;
+
+    public HelpBroker helpBroker;
 
     private JPanel mainPanel;
 
@@ -91,9 +96,13 @@ public class View extends JFrame {
         JMenu menu = new JMenu("Archivo");
         itemPreferences = new JMenuItem("Preferencias");
         itemDisconnect = new JMenuItem("Conectar");
+        itemHelp = new JMenuItem("Ayuda");
+        itemExit = new JMenuItem("Salir");
 
         menu.add(itemPreferences);
         menu.add(itemDisconnect);
+        menu.add(itemHelp);
+        menu.add(itemExit);
 
         menuBar.add(menu);
         menuBar.add(Box.createHorizontalGlue());
@@ -111,13 +120,29 @@ public class View extends JFrame {
             URL hsURL = fichero.toURI().toURL();
 
             HelpSet helpset = new HelpSet(getClass().getClassLoader(), hsURL);
-            HelpBroker hb = helpset.createHelpBroker();
+            helpBroker = helpset.createHelpBroker();
 
-            hb.enableHelpKey(getRootPane(), "introduccion", helpset);
-            hb.enableHelpKey(navesPanel, "naves", helpset);
-            hb.enableHelpKey(tripulantesPanel, "tripulantes", helpset);
-            hb.enableHelpKey(misionesPanel, "misiones", helpset);
-            hb.enableHelpKey(informesPanel, "informes", helpset);
+            helpBroker.enableHelpKey(getRootPane(), "introduccion", helpset);
+            helpBroker.enableHelpKey(navesPanel, "naves", helpset);
+            helpBroker.enableHelpKey(tripulantesPanel, "tripulantes", helpset);
+            helpBroker.enableHelpKey(misionesPanel, "misiones", helpset);
+            helpBroker.enableHelpKey(informesPanel, "informes", helpset);
+
+            Dimension pantalla = Toolkit.getDefaultToolkit().getScreenSize();
+            int anchoPantalla = pantalla.width;
+            int altoPantalla = pantalla.height;
+
+            // Obtener dimensiones de la ventana de ayuda
+            Dimension tamanoVentana = helpBroker.getSize();
+            int anchoVentana = tamanoVentana.width;
+            int altoVentana = tamanoVentana.height;
+
+            // Calcular posición centrada
+            int x = (anchoPantalla - anchoVentana) / 2;
+            int y = (altoPantalla - altoVentana) / 2;
+
+            // Establecer la posición
+            helpBroker.setLocation(new Point(x, y));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
