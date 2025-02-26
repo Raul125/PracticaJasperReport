@@ -9,5 +9,5 @@
    <mapID target="misiones" url="html/misiones.html" />
    <mapID target="informes" url="html/informes.html" />
    <mapID target="modo_oscuro" url="html/modo_oscuro.html" />
-   <mapID target="conectar_bd" url="html/conectar_bd.html" />
+   <mapID target="confirmar_eliminar" url="html/confirmar_eliminar.html" />
 </map>

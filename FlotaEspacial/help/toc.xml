@@ -9,7 +9,7 @@ topicimage="ItemIco"-->
         <tocitem text="Informes" target="informes"/>
         <tocitem text="Preferencias" target="preferencias">
             <tocitem text="Modo Oscuro" target="modo_oscuro"/>
-            <tocitem text="Conectar a Base de Datos" target="conectar_bd"/>
+            <tocitem text="Confirmar al Eliminar" target="confirmar_eliminar"/>
         </tocitem>
     </tocitem>
 </toc>
